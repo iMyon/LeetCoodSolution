@@ -1,6 +1,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <stack>
 #include "dataStruct.h"
 
 typedef unsigned __int32 uint32_t;
@@ -296,4 +297,128 @@ public:
         preorderTraversal(root->right);
         return arr;
     }
+
+    /*
+    #Linked List Cycle
+    Given a linked list, determine if it has a cycle in it.
+
+    Follow up:
+    Can you solve it without using extra space?
+    最佳算法：快慢指针
+    */
+    bool hasCycle(ListNode *head) {
+        map<ListNode*, bool> nodeMap;
+        while (head){
+            if (nodeMap[head]) return true;
+            nodeMap[head] = true;
+            head = head->next;
+        }
+        return false;
+    }
+
+    /*
+    #Populating Next Right Pointers in Each Node
+    Given a binary tree
+
+    struct TreeLinkNode {
+    TreeLinkNode *left;
+    TreeLinkNode *right;
+    TreeLinkNode *next;
+    }
+
+    Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+
+    Initially, all next pointers are set to NULL.
+
+    Note:
+
+    You may only use constant extra space.
+    You may assume that it is a perfect binary tree (ie, all leaves are at the same level, and every parent has two children).
+
+    For example,
+    Given the following perfect binary tree,
+
+    1
+    /  \
+    2    3
+    / \  / \
+    4  5  6  7
+
+    After calling your function, the tree should look like:
+
+    1 -> NULL
+    /  \
+    2 -> 3 -> NULL
+    / \  / \
+    4->5->6->7 -> NULL
+
+    24ms
+    */
+    void connect(TreeLinkNode *root) {
+        if (root == nullptr) return;
+        TreeLinkNode *tleft = root->left;
+        TreeLinkNode *tright = root->right;
+        //connect left and right tree
+        while (tleft)
+        {
+            tleft->next = tright;
+            tleft = tleft->right;
+            tright = tright->left;
+        }
+        connect(root->left);
+        connect(root->right);
+    }
+
+    /*
+    #Binary Tree Inorder Traversal
+    Given a binary tree, return the inorder traversal of its nodes' values.
+
+    For example:
+    Given binary tree {1,#,2,3},
+
+    1
+    \
+    2
+    /
+    3
+
+    return [1,3,2].
+
+    Note: Recursive solution is trivial, could you do it iteratively?
+
+    inorder trivial use stack
+
+    */
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> v;
+        stack<TreeNode*> s;
+        TreeNode* temp = root;
+        while (true)
+        {
+            while (temp)
+            {
+                s.push(temp);
+                temp = temp->left;
+            }
+            if (s.empty()) break;
+            v.push_back(s.top()->val);
+            temp = s.top()->right;
+            s.pop();
+        }
+        return v;
+    }//～Runtime: 0 ms
+
+    /*
+    #Contains Duplicate
+    Given an array of integers, find if the array contains any duplicates. Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.
+    */
+    bool containsDuplicate(vector<int>& nums) {
+        map<int, bool> m;
+        for (int i = 0; i < nums.size(); i++)
+        {
+            if (m[nums.at(i)]) return true;
+            m[nums.at(i)] = true;
+        }
+        return false;
+    }//~ 108 ms
 };
